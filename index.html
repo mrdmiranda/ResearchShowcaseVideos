@@ -11,12 +11,30 @@ body {
     background: black;
 }
 
+.container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.titles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 50px;
+    background: black;
+    color: white;
+    font-size: 32px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+}
+
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 100px);
 }
 
 video {
@@ -24,18 +42,50 @@ video {
     height: 100%;
     object-fit: cover;
 }
+
+.bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 50px;
+    background: black;
+    color: white;
+    font-size: 28px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+}
 </style>
+
 </head>
 
 <body>
 
-<div class="grid">
-    <video id="v1" muted playsinline autoplay loop src="Plane1.mp4"></video>
-    <video id="v2" muted playsinline autoplay loop src="Plane2.mp4"></video>
-    <video id="v3" muted playsinline autoplay loop src="Failure1.mp4"></video>
-    <video id="v4" muted playsinline autoplay loop src="Failure2.mp4"></video>
+<div class="container">
+
+    <!-- Top titles -->
+    <div class="titles">
+        <div>Baseline</div>
+        <div>Optimised</div>
+    </div>
+
+    <!-- Videos -->
+    <div class="grid">
+        <video id="v1" muted playsinline autoplay loop src="Plane1.mp4"></video>
+        <video id="v2" muted playsinline autoplay loop src="Plane2.mp4"></video>
+        <video id="v3" muted playsinline autoplay loop src="Failure1.mp4"></video>
+        <video id="v4" muted playsinline autoplay loop src="Failure2.mp4"></video>
+    </div>
+
+    <!-- Bottom values -->
+    <div class="bottom">
+        <div>Max FI=0.91</div>
+        <div>Max FI=0.80</div>
+    </div>
+
 </div>
-    
+
+
 <script>
 const videos = document.querySelectorAll("video");
 
