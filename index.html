@@ -336,32 +336,24 @@ Promise.all(
 
 
 
-    setInterval(()=>{
+setInterval(() => {
 
+    const masterTime = videos[0].currentTime;
 
-        const masterTime =
-            videos[0].currentTime;
+    videos.forEach(video => {
 
+        const drift = video.currentTime - masterTime;
 
+        // Only correct large errors
+        if (Math.abs(drift) > 0.3) {
 
-        videos.forEach(video=>{
+            video.currentTime = masterTime;
 
+        }
 
-            if (
-                Math.abs(
-                    video.currentTime - masterTime
-                ) > 0.05
-            ){
+    });
 
-                video.currentTime = masterTime;
-
-            }
-
-
-        });
-
-
-    },500);
+}, 2000);
 
 
 
