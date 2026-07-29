@@ -12,18 +12,19 @@ body {
 }
 
 .container {
+    display: grid;
+    grid-template-rows: 50px 1fr 50px;
     width: 100vw;
     height: 100vh;
 }
 
-.titles {
+.titles, .bottom {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 50px;
-    background: black;
     color: white;
-    font-size: 32px;
+    background: black;
     font-family: Arial, sans-serif;
+    font-size: 28px;
     font-weight: bold;
     text-align: center;
     align-items: center;
@@ -33,27 +34,12 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    width: 100vw;
-    height: calc(100vh - 100px);
 }
 
 video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.bottom {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    height: 50px;
-    background: black;
-    color: white;
-    font-size: 28px;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    text-align: center;
-    align-items: center;
 }
 </style>
 
@@ -63,21 +49,18 @@ video {
 
 <div class="container">
 
-    <!-- Top titles -->
     <div class="titles">
         <div>Baseline</div>
         <div>Optimised</div>
     </div>
 
-    <!-- Videos -->
     <div class="grid">
-        <video id="v1" muted playsinline autoplay loop src="Plane1.mp4"></video>
-        <video id="v2" muted playsinline autoplay loop src="Plane2.mp4"></video>
-        <video id="v3" muted playsinline autoplay loop src="Failure1.mp4"></video>
-        <video id="v4" muted playsinline autoplay loop src="Failure2.mp4"></video>
+        <video muted playsinline autoplay loop src="Plane1.mp4"></video>
+        <video muted playsinline autoplay loop src="Plane2.mp4"></video>
+        <video muted playsinline autoplay loop src="Failure1.mp4"></video>
+        <video muted playsinline autoplay loop src="Failure2.mp4"></video>
     </div>
 
-    <!-- Bottom values -->
     <div class="bottom">
         <div>Max FI=0.91</div>
         <div>Max FI=0.80</div>
@@ -85,20 +68,9 @@ video {
 
 </div>
 
-
 <script>
-const videos = document.querySelectorAll("video");
-
-videos.forEach(video => {
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
-
-    video.play().catch(() => {
-        document.addEventListener("click", () => {
-            video.play();
-        }, { once: true });
-    });
+document.querySelectorAll("video").forEach(video => {
+    video.play();
 });
 </script>
 
