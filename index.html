@@ -30,22 +30,24 @@ video {
 <body>
 
 <div class="grid">
-    <video id="v1" muted playsinline loop src="Plane1.mp4"></video>
-    <video id="v2" muted playsinline loop src="Plane2.mp4"></video>
-    <video id="v3" muted playsinline loop src="Failure1.mp4"></video>
-    <video id="v4" muted playsinline loop src="Failure2.mp4"></video>
+    <video id="v1" muted playsinline autoplay loop src="Plane1.mp4"></video>
+    <video id="v2" muted playsinline autoplay loop src="Plane2.mp4"></video>
+    <video id="v3" muted playsinline autoplay loop src="Failure1.mp4"></video>
+    <video id="v4" muted playsinline autoplay loop src="Failure2.mp4"></video>
 </div>
     
 <script>
-const videos = [...document.querySelectorAll("video")];
+const videos = document.querySelectorAll("video");
 
-Promise.all(videos.map(v => new Promise(resolve => {
-    v.oncanplay = resolve;
-}))).then(() => {
-    videos.forEach(v => {
-        v.currentTime = 0;
-        v.loop = true;
-        v.play();
+videos.forEach(video => {
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+
+    video.play().catch(() => {
+        document.addEventListener("click", () => {
+            video.play();
+        }, { once: true });
     });
 });
 </script>
