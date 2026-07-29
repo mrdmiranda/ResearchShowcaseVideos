@@ -76,10 +76,17 @@ video {
 
 
     <!-- Videos -->
-<video id="v1" muted playsinline loop preload="metadata" src="Plane1.mp4"></video>
-<video id="v2" muted playsinline loop preload="metadata" src="Plane2.mp4"></video>
-<video id="v3" muted playsinline loop preload="metadata" src="Failure1.mp4"></video>
-<video id="v4" muted playsinline loop preload="metadata" src="Failure2.mp4"></video>
+    <div class="grid">
+
+        <video id="v1" muted playsinline autoplay loop preload="auto" src="Plane1.mp4"></video>
+
+        <video id="v2" muted playsinline autoplay loop preload="auto" src="Plane2.mp4"></video>
+
+        <video id="v3" muted playsinline autoplay loop preload="auto" src="Failure1.mp4"></video>
+
+        <video id="v4" muted playsinline autoplay loop preload="auto" src="Failure2.mp4"></video>
+
+    </div>
 
 
     <!-- Performance values -->
@@ -95,27 +102,30 @@ video {
 
 const videos = Array.from(document.querySelectorAll("video"));
 
+
+/* Wait until all videos are ready */
 Promise.all(
     videos.map(video => {
         return new Promise(resolve => {
-            if (video.readyState >= 3) {
-                resolve();
-            } else {
-                video.addEventListener("canplay", resolve, { once: true });
-            }
+            video.addEventListener("canplaythrough", resolve, { once: true });
+            video.load();
         });
     })
 ).then(() => {
 
+    // Reset all videos
     videos.forEach(video => {
         video.currentTime = 0;
     });
 
+
+    // Start all videos together
     Promise.all(
         videos.map(video => video.play())
     );
 
-    // Hard sync
+
+    // Hard synchronisation
     setInterval(() => {
 
         const masterTime = videos[0].currentTime;
@@ -131,6 +141,7 @@ Promise.all(
     }, 500);
 
 });
+
 
 </script>
 
