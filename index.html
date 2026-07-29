@@ -3,135 +3,224 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4 Video Display</title>
+<title>Research Showcase Videos</title>
+
 <style>
 html, body {
     margin: 0;
     padding: 0;
-    height: 100dvh;
-    width: 100%;
-    background: black;
-    overflow: hidden;
-    overscroll-behavior: none;
-}
-.container {
-    display: grid;
-    grid-template-rows: clamp(32px, 7vh, 50px) 1fr clamp(32px, 7vh, 50px);
-    width: 100%;
-    height: 100dvh;
-    min-height: 0;
-}
-/* Top labels */
-.titles {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: black;
-    color: white;
-    font-family: Arial, sans-serif;
-    font-size: clamp(14px, 4vw, 28px);
-    font-weight: bold;
-    text-align: center;
-    align-items: center;
-    padding: 0 4px;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-/* Video area */
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    min-height: 0;
-    overflow: hidden;
-}
-/* Videos */
-video {
     width: 100%;
     height: 100%;
-    min-height: 0;
-    min-width: 0;
-    object-fit: contain;
+    background: black;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.titles,
+.bottom {
+    height: clamp(32px,7vh,50px);
+    display: flex;
+    color: white;
+    font-weight: bold;
     background: black;
 }
-.cell-1 { grid-column: 1; grid-row: 1; }
-.cell-2 { grid-column: 2; grid-row: 1; }
-.cell-3 { grid-column: 1; grid-row: 2; }
-.cell-4 { grid-column: 2; grid-row: 2; }
-/* Bottom labels */
-.bottom {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: black;
-    color: white;
-    font-family: Arial, sans-serif;
-    font-size: clamp(12px, 3.5vw, 24px);
-    font-weight: bold;
-    text-align: center;
+
+.titles div,
+.bottom div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    padding: 0 4px;
-    box-sizing: border-box;
+}
+
+.titles {
+    font-size: clamp(14px,4vw,28px);
+}
+
+.bottom {
+    font-size: clamp(12px,3.5vw,24px);
+}
+
+.grid {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cell {
+    width: 50%;
+    height: 50%;
     overflow: hidden;
+    background: black;
+    position: relative;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: black;
+}
+
+/* Hide the real videos */
+video {
+    display: none;
 }
 </style>
 </head>
+
 <body>
+
 <div class="container">
-    <!-- Column titles -->
-    <div class="titles">
-        <div>Baseline</div>
-        <div>Optimised</div>
-    </div>
-    <!-- Videos -->
-    <div class="grid">
-        <video id="v1" class="cell-1" muted playsinline autoplay loop preload="auto" src="Plane1.mp4"></video>
-        <video id="v2" class="cell-2" muted playsinline autoplay loop preload="auto" src="Plane2.mp4"></video>
-        <video id="v3" class="cell-3" muted playsinline autoplay loop preload="auto" src="Failure1.mp4"></video>
-        <video id="v4" class="cell-4" muted playsinline autoplay loop preload="auto" src="Failure2.mp4"></video>
-    </div>
-    <!-- Performance values -->
-    <div class="bottom">
-        <div>Max FI=0.91</div>
-        <div>Max FI=0.80</div>
-    </div>
+
+<div class="titles">
+    <div>Baseline</div>
+    <div>Optimised</div>
 </div>
+
+<div class="grid">
+
+    <div class="cell"><canvas id="c1"></canvas></div>
+    <div class="cell"><canvas id="c2"></canvas></div>
+    <div class="cell"><canvas id="c3"></canvas></div>
+    <div class="cell"><canvas id="c4"></canvas></div>
+
+</div>
+
+<div class="bottom">
+    <div>Max FI=0.91</div>
+    <div>Max FI=0.80</div>
+</div>
+
+</div>
+
+<!-- Hidden videos -->
+
+<video id="v1" muted playsinline autoplay loop preload="auto" src="Plane1.mp4"></video>
+<video id="v2" muted playsinline autoplay loop preload="auto" src="Plane2.mp4"></video>
+<video id="v3" muted playsinline autoplay loop preload="auto" src="Failure1.mp4"></video>
+<video id="v4" muted playsinline autoplay loop preload="auto" src="Failure2.mp4"></video>
+
 <script>
-const videos = Array.from(document.querySelectorAll("video"));
 
-videos.forEach(video => {
-    video.addEventListener("error", () => {
-        console.error(video.id, "failed to load:", video.error);
-    });
-});
+const videos = [
+    document.getElementById("v1"),
+    document.getElementById("v2"),
+    document.getElementById("v3"),
+    document.getElementById("v4")
+];
 
-/* Wait until all videos are ready */
-Promise.all(
-    videos.map(video => {
-        return new Promise((resolve, reject) => {
-            video.addEventListener("canplaythrough", resolve, { once: true });
-            video.addEventListener("error", () => reject(new Error(video.id + " failed to load")), { once: true });
-            video.load();
-        });
-    })
-).then(() => {
-    // Reset all videos
-    videos.forEach(video => {
-        video.currentTime = 0;
+const canvases = [
+    document.getElementById("c1"),
+    document.getElementById("c2"),
+    document.getElementById("c3"),
+    document.getElementById("c4")
+];
+
+const ctx = canvases.map(c => c.getContext("2d"));
+
+function resizeCanvas(){
+
+    canvases.forEach(canvas=>{
+
+        const r = canvas.getBoundingClientRect();
+
+        canvas.width = r.width;
+        canvas.height = r.height;
+
     });
-    // Start all videos together
-    return Promise.all(videos.map(video => video.play()));
-}).then(() => {
-    // Hard synchronisation
-    setInterval(() => {
-        const masterTime = videos[0].currentTime;
-        videos.forEach(video => {
-            if (Math.abs(video.currentTime - masterTime) > 0.05) {
-                video.currentTime = masterTime;
-            }
-        });
-    }, 500);
-}).catch(err => {
-    console.error("Video setup error:", err);
-});
+
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+Promise.all(videos.map(video => {
+
+    return new Promise((resolve,reject)=>{
+
+        video.addEventListener("canplaythrough", resolve, {once:true});
+        video.addEventListener("error", reject, {once:true});
+
+        video.load();
+
+    });
+
+}))
+
+.then(async()=>{
+
+    videos.forEach(v=>v.currentTime=0);
+
+    await Promise.all(
+        videos.map(v=>v.play())
+    );
+
+    draw();
+
+})
+
+.catch(console.error);
+
+function draw(){
+
+    for(let i=0;i<4;i++){
+
+        const v = videos[i];
+        const c = canvases[i];
+        const g = ctx[i];
+
+        if(v.readyState >= 2){
+
+            const vw = v.videoWidth;
+            const vh = v.videoHeight;
+
+            const cw = c.width;
+            const ch = c.height;
+
+            const scale = Math.min(cw/vw, ch/vh);
+
+            const w = vw*scale;
+            const h = vh*scale;
+
+            const x = (cw-w)/2;
+            const y = (ch-h)/2;
+
+            g.fillStyle="black";
+            g.fillRect(0,0,cw,ch);
+
+            g.drawImage(v,x,y,w,h);
+
+        }
+
+    }
+
+    // keep videos synchronized
+
+    const master = videos[0].currentTime;
+
+    for(let i=1;i<videos.length;i++){
+
+        if(Math.abs(videos[i].currentTime-master)>0.05){
+
+            videos[i].currentTime=master;
+
+        }
+
+    }
+
+    requestAnimationFrame(draw);
+
+}
+
 </script>
+
 </body>
 </html>
