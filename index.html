@@ -261,20 +261,26 @@ video {
 
 <script>
 
+
 const videos = Array.from(
     document.querySelectorAll("video")
 );
+
 
 
 videos.forEach(video => {
 
     video.addEventListener("error", () => {
 
-        console.error(video.id, video.error);
+        console.error(
+            video.id,
+            video.error
+        );
 
     });
 
 });
+
 
 
 Promise.all(
@@ -283,19 +289,23 @@ Promise.all(
 
         return new Promise((resolve, reject) => {
 
+
             video.addEventListener(
                 "canplaythrough",
                 resolve,
                 { once:true }
             );
 
+
             video.addEventListener(
                 "error",
-                reject,
+                () => reject(video.error),
                 { once:true }
             );
 
+
             video.load();
+
 
         });
 
@@ -313,50 +323,37 @@ Promise.all(
     });
 
 
+
     await Promise.all(
 
         videos.map(video =>
+
             video.play()
+
         )
 
     );
 
 
-    /*
-       Soft synchronisation:
-       only correct small drift,
-       don't constantly seek.
-    */
 
     setInterval(()=>{
 
 
-        const master =
+        const masterTime =
             videos[0].currentTime;
+
 
 
         videos.forEach(video=>{
 
 
-            const difference =
-                video.currentTime - master;
+            if (
+                Math.abs(
+                    video.currentTime - masterTime
+                ) > 0.05
+            ){
 
-
-            if (Math.abs(difference) > 0.25) {
-
-
-                video.playbackRate =
-                    difference > 0
-                    ? 0.98
-                    : 1.02;
-
-
-            }
-            else {
-
-
-                video.playbackRate = 1;
-
+                video.currentTime = masterTime;
 
             }
 
@@ -364,7 +361,7 @@ Promise.all(
         });
 
 
-    },1000);
+    },500);
 
 
 
@@ -378,6 +375,7 @@ Promise.all(
     );
 
 });
+
 
 </script>
 
