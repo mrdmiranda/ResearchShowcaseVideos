@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Research Showcase Videos</title>
+
+<title>4 Video Display</title>
 
 <style>
+
 html, body {
     margin: 0;
     padding: 0;
@@ -13,214 +15,370 @@ html, body {
     height: 100%;
     background: black;
     overflow: hidden;
-    font-family: Arial, sans-serif;
+    overscroll-behavior: none;
 }
 
+
+/* Main layout */
 .container {
     display: flex;
     flex-direction: column;
+
     height: 100vh;
-    height: 100dvh;
+    height: 100svh;
 }
 
-.titles,
-.bottom {
-    height: clamp(32px,7vh,50px);
+
+/* Top labels */
+.titles {
+    flex: 0 0 clamp(32px, 7vh, 50px);
+
     display: flex;
-    color: white;
-    font-weight: bold;
+
     background: black;
+    color: white;
+
+    font-family: Arial, sans-serif;
+    font-size: clamp(14px, 4vw, 28px);
+    font-weight: bold;
+
+    text-align: center;
 }
 
-.titles div,
-.bottom div {
+
+.titles div {
     flex: 1;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    overflow: hidden;
 }
 
-.titles {
-    font-size: clamp(14px,4vw,28px);
-}
 
-.bottom {
-    font-size: clamp(12px,3.5vw,24px);
-}
+
+/* Video area */
 
 .grid {
+
     flex: 1;
+
     display: flex;
     flex-wrap: wrap;
+
+    overflow: hidden;
+
+    min-height: 0;
+
+    background: black;
+
+    isolation: isolate;
 }
+
+
+
+/* Individual video cells */
 
 .cell {
+
     width: 50%;
     height: 50%;
-    overflow: hidden;
-    background: black;
+
     position: relative;
+
+    overflow: hidden;
+
+    background: black;
+
+    contain: layout paint;
 }
 
-canvas {
+
+
+/* Videos */
+
+video {
+
+    position: absolute;
+
+    inset: 0;
+
     width: 100%;
     height: 100%;
+
     display: block;
+
+    object-fit: contain;
+
     background: black;
+
+
+    /* Safari rendering fixes */
+
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
 }
 
-/* Hide the real videos */
-video {
-    display: none;
+
+
+/* Bottom labels */
+
+.bottom {
+
+    flex: 0 0 clamp(32px, 7vh, 50px);
+
+    display: flex;
+
+    background: black;
+    color: white;
+
+    font-family: Arial, sans-serif;
+    font-size: clamp(12px, 3.5vw, 24px);
+    font-weight: bold;
+
 }
+
+
+.bottom div {
+
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
-<div class="titles">
-    <div>Baseline</div>
-    <div>Optimised</div>
+
+    <!-- Titles -->
+
+    <div class="titles">
+
+        <div>Baseline</div>
+
+        <div>Optimised</div>
+
+    </div>
+
+
+
+    <!-- Videos -->
+
+    <div class="grid">
+
+
+        <div class="cell">
+
+            <video id="v1"
+                muted
+                playsinline
+                autoplay
+                loop
+                preload="auto"
+                src="Plane1.mp4">
+            </video>
+
+        </div>
+
+
+        <div class="cell">
+
+            <video id="v2"
+                muted
+                playsinline
+                autoplay
+                loop
+                preload="auto"
+                src="Plane2.mp4">
+            </video>
+
+        </div>
+
+
+        <div class="cell">
+
+            <video id="v3"
+                muted
+                playsinline
+                autoplay
+                loop
+                preload="auto"
+                src="Failure1.mp4">
+            </video>
+
+        </div>
+
+
+        <div class="cell">
+
+            <video id="v4"
+                muted
+                playsinline
+                autoplay
+                loop
+                preload="auto"
+                src="Failure2.mp4">
+            </video>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Bottom values -->
+
+    <div class="bottom">
+
+        <div>Max FI=0.91</div>
+
+        <div>Max FI=0.80</div>
+
+    </div>
+
+
 </div>
 
-<div class="grid">
 
-    <div class="cell"><canvas id="c1"></canvas></div>
-    <div class="cell"><canvas id="c2"></canvas></div>
-    <div class="cell"><canvas id="c3"></canvas></div>
-    <div class="cell"><canvas id="c4"></canvas></div>
-
-</div>
-
-<div class="bottom">
-    <div>Max FI=0.91</div>
-    <div>Max FI=0.80</div>
-</div>
-
-</div>
-
-<!-- Hidden videos -->
-
-<video id="v1" muted playsinline autoplay loop preload="auto" src="Plane1.mp4"></video>
-<video id="v2" muted playsinline autoplay loop preload="auto" src="Plane2.mp4"></video>
-<video id="v3" muted playsinline autoplay loop preload="auto" src="Failure1.mp4"></video>
-<video id="v4" muted playsinline autoplay loop preload="auto" src="Failure2.mp4"></video>
 
 <script>
 
-const videos = [
-    document.getElementById("v1"),
-    document.getElementById("v2"),
-    document.getElementById("v3"),
-    document.getElementById("v4")
-];
 
-const canvases = [
-    document.getElementById("c1"),
-    document.getElementById("c2"),
-    document.getElementById("c3"),
-    document.getElementById("c4")
-];
+const videos = Array.from(
+    document.querySelectorAll("video")
+);
 
-const ctx = canvases.map(c => c.getContext("2d"));
 
-function resizeCanvas(){
 
-    canvases.forEach(canvas=>{
+videos.forEach(video => {
 
-        const r = canvas.getBoundingClientRect();
+    video.addEventListener("error", () => {
 
-        canvas.width = r.width;
-        canvas.height = r.height;
+        console.error(
+            video.id,
+            video.error
+        );
 
     });
 
-}
+});
 
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
 
-Promise.all(videos.map(video => {
 
-    return new Promise((resolve,reject)=>{
+Promise.all(
 
-        video.addEventListener("canplaythrough", resolve, {once:true});
-        video.addEventListener("error", reject, {once:true});
+    videos.map(video => {
 
-        video.load();
+        return new Promise((resolve, reject) => {
 
-    });
 
-}))
+            video.addEventListener(
+                "canplaythrough",
+                resolve,
+                { once:true }
+            );
+
+
+            video.addEventListener(
+                "error",
+                () => reject(video.error),
+                { once:true }
+            );
+
+
+            video.load();
+
+
+        });
+
+    })
+
+)
 
 .then(async()=>{
 
-    videos.forEach(v=>v.currentTime=0);
+
+    videos.forEach(video => {
+
+        video.currentTime = 0;
+
+    });
+
+
 
     await Promise.all(
-        videos.map(v=>v.play())
+
+        videos.map(video =>
+
+            video.play()
+
+        )
+
     );
 
-    draw();
+
+
+    setInterval(()=>{
+
+
+        const masterTime =
+            videos[0].currentTime;
+
+
+
+        videos.forEach(video=>{
+
+
+            if (
+                Math.abs(
+                    video.currentTime - masterTime
+                ) > 0.05
+            ){
+
+                video.currentTime = masterTime;
+
+            }
+
+
+        });
+
+
+    },500);
+
+
 
 })
 
-.catch(console.error);
+.catch(error=>{
 
-function draw(){
+    console.error(
+        "Video setup error:",
+        error
+    );
 
-    for(let i=0;i<4;i++){
+});
 
-        const v = videos[i];
-        const c = canvases[i];
-        const g = ctx[i];
-
-        if(v.readyState >= 2){
-
-            const vw = v.videoWidth;
-            const vh = v.videoHeight;
-
-            const cw = c.width;
-            const ch = c.height;
-
-            const scale = Math.min(cw/vw, ch/vh);
-
-            const w = vw*scale;
-            const h = vh*scale;
-
-            const x = (cw-w)/2;
-            const y = (ch-h)/2;
-
-            g.fillStyle="black";
-            g.fillRect(0,0,cw,ch);
-
-            g.drawImage(v,x,y,w,h);
-
-        }
-
-    }
-
-    // keep videos synchronized
-
-    const master = videos[0].currentTime;
-
-    for(let i=1;i<videos.length;i++){
-
-        if(Math.abs(videos[i].currentTime-master)>0.05){
-
-            videos[i].currentTime=master;
-
-        }
-
-    }
-
-    requestAnimationFrame(draw);
-
-}
 
 </script>
+
 
 </body>
 </html>
