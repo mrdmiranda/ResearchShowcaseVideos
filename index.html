@@ -102,30 +102,27 @@ video {
 
 const videos = Array.from(document.querySelectorAll("video"));
 
-
-/* Wait until all videos are ready */
 Promise.all(
     videos.map(video => {
         return new Promise(resolve => {
-            video.addEventListener("canplaythrough", resolve, { once: true });
-            video.load();
+            if (video.readyState >= 3) {
+                resolve();
+            } else {
+                video.addEventListener("canplay", resolve, { once: true });
+            }
         });
     })
 ).then(() => {
 
-    // Reset all videos
     videos.forEach(video => {
         video.currentTime = 0;
     });
 
-
-    // Start all videos together
     Promise.all(
         videos.map(video => video.play())
     );
 
-
-    // Hard synchronisation
+    // Hard sync
     setInterval(() => {
 
         const masterTime = videos[0].currentTime;
@@ -141,7 +138,6 @@ Promise.all(
     }, 500);
 
 });
-
 
 </script>
 
