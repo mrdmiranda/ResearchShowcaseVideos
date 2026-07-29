@@ -44,6 +44,7 @@ Promise.all(videos.map(v => new Promise(resolve => {
 }))).then(() => {
     videos.forEach(v => {
         v.currentTime = 0;
+        v.loop = true;
         v.play();
     });
 });
