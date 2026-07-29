@@ -53,6 +53,10 @@ video {
     object-fit: contain;
     background: black;
 }
+.cell-1 { grid-column: 1; grid-row: 1; }
+.cell-2 { grid-column: 2; grid-row: 1; }
+.cell-3 { grid-column: 1; grid-row: 2; }
+.cell-4 { grid-column: 2; grid-row: 2; }
 /* Bottom labels */
 .bottom {
     display: grid;
@@ -79,10 +83,10 @@ video {
     </div>
     <!-- Videos -->
     <div class="grid">
-        <video id="v1" muted playsinline autoplay loop preload="auto" src="Plane1.mp4"></video>
-        <video id="v2" muted playsinline autoplay loop preload="auto" src="Plane2.mp4"></video>
-        <video id="v3" muted playsinline autoplay loop preload="auto" src="Failure1.mp4"></video>
-        <video id="v4" muted playsinline autoplay loop preload="auto" src="Failure2.mp4"></video>
+        <video id="v1" class="cell-1" muted playsinline autoplay loop preload="auto" src="Plane1.mp4"></video>
+        <video id="v2" class="cell-2" muted playsinline autoplay loop preload="auto" src="Plane2.mp4"></video>
+        <video id="v3" class="cell-3" muted playsinline autoplay loop preload="auto" src="Failure1.mp4"></video>
+        <video id="v4" class="cell-4" muted playsinline autoplay loop preload="auto" src="Failure2.mp4"></video>
     </div>
     <!-- Performance values -->
     <div class="bottom">
